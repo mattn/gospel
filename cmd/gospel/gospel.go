@@ -1,19 +1,24 @@
 package main
 
 import (
+	"flag"
 	"github.com/mattn/gospel"
 	"log"
 	"os"
 	"os/exec"
 )
 
+var addr = flag.String("a", "listen address", ":8888")
+
 func main() {
-	//cmd := exec.Command(`c:\dev\listen-socket\child.exe`)
-	cmd := exec.Command(`c:\dev\go\src\github.com\mattn\gospel\example\echo-server.exe`)
+	if len(os.Args) != 2 {
+		os.Exit(1)
+	}
+	cmd := exec.Command(os.Args[1])
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	g := gospel.New(cmd)
-	err := g.Listen(":8888")
+	err := g.Listen(*addr)
 	if err != nil {
 		log.Fatal(err)
 	}
